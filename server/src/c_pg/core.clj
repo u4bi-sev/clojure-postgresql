@@ -4,7 +4,8 @@
             [compojure.handler :as h]
             [compojure.route :as route]
             [ring.middleware.json :as m-json]
-            [clojure.java.jdbc :as sql]))
+            [clojure.java.jdbc :as sql]
+            [ring.middleware.cors :refer [wrap-cors]]))
 
 (def conn {:dbtype "postgresql"
            :dbname "postgres"
@@ -72,4 +73,6 @@
 (def app
   (-> (h/api handler)
       (m-json/wrap-json-params)
-      (m-json/wrap-json-response)))
+      (m-json/wrap-json-response)
+      (wrap-cors :access-control-allow-origin [#"http://127.0.0.1:5500"] ; #".*"
+                 :access-control-allow-methods [:get :put :post :delete])))
