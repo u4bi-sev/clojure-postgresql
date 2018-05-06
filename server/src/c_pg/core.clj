@@ -6,12 +6,14 @@
             [ring.middleware.json :refer [wrap-json-response]]))
 
 (defroutes handler
-  (GET "/" []
-    (response 
-      {:message "u4bi"}))
-  (route/not-found (response
-                    {:message "not found"})))
-  
+           (context "/user" []
+                    (GET "/" [] (response {:message "get users"})) 
+                    (GET "/:id" [id] (response {:message (str "get user id - " id)})) 
+                    (POST "/" [name pay age] (response {:message (str "insert user - " name " / " pay " / " age)}))
+                    (PUT "/:id" [id] (response {:message (str "update user id - " id)})) 
+                    (DELETE "/:id" [id] (response {:message (str "delete id - " id)})))
+           (route/not-found (response {:message "not found"})))
+
 (def app
   (wrap-json-response 
    (h/api handler)))
